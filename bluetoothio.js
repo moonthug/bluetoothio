@@ -2,4 +2,4 @@
  * Created by moonman
  */
 
-module.exports = require('./build/Release/bluelist');
+module.exports = require('./build/Release/bluetoothio');
