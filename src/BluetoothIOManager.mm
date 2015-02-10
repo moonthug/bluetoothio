@@ -47,14 +47,12 @@
 //--------------------------------------------------------------
 //-(void)dealloc {
 //    [super dealloc];
-//    [self disconnectFromAllDevices];
 //}
 
 
 
 //--------------------------------------------------------------
 - (void)connectToDevice:(NSString*)addrStr {
-    
     BluetoothDeviceAddress addr;
     IOBluetoothNSStringToDeviceAddress(addrStr, &addr);
     
@@ -65,7 +63,6 @@
 
 //--------------------------------------------------------------
 - (void)disconnectFromDevice:(NSString*)addrStr {
-    
     NSArray * devices = [IOBluetoothDevice pairedDevices];
     IOBluetoothDevice * device;
     NSEnumerator * e = [devices objectEnumerator];
