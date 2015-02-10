@@ -1,6 +1,6 @@
 # BluetoothIO
 
-A simple wrapper for OSX IOBluetooth Framework.
+A simple NodeJS wrapper for OSX IOBluetooth Framework.
 
 See more at the [Apple Docs](https://developer.apple.com/library/mac/documentation/DeviceDrivers/Reference/IOBluetooth/_index.html).
 
