@@ -17,18 +17,16 @@ $ npm install https://github.com/moonthug/bluetoothio/tarball/master
 ```javascript
 var bluetoothio = require('bluetoothio');
 
-# Get a list of paired devices
-# i.e. [ { name: 'dethfone_s5', address: '68-48-98-3d-6c-8a' } ]
+// Get a list of paired devices
+// i.e. [ { name: 'dethfone_s5', address: '68-48-98-3d-6c-8a' } ]
 console.dir(bluetoothio.getPairedDevices());
 
-# Connect to a device
+// Connect to a device
 bluetoothio.connectToDevice('68-48-98-3d-6c-8a');
 
-# Get a list of connected devices
-# i.e. [ { name: 'dethfone_s5', address: '68-48-98-3d-6c-8a', RSSI: 0, rawRSSI: -59 } ]
-console.dir(bluetoothio.getPairedDevices());
-
-#
+// Get a list of connected devices
+// i.e. [ { name: 'dethfone_s5', address: '68-48-98-3d-6c-8a', RSSI: 0, rawRSSI: -59 } ]
+console.dir(bluetoothio.getConnectedDevices());
 ```
 
 ### Development
