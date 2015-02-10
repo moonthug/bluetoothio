@@ -1,8 +1,8 @@
 {
-  "name": "bluelist",
+  "name": "bluetoothio",
   "version": "0.0.1",
-  "description": "BluetoothIO bindings for NodeJS",
-  "main": "bluelist.js",
+  "description": "IOBluetooth bindings for NodeJS",
+  "main": "index.js",
   "scripts": {
     "test": "mocha test",
     "install": "node-gyp rebuild"

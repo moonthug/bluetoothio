@@ -4,7 +4,7 @@
         "sources": [
             "./src/addon.cc",
             "./src/BluetoothIOManager.mm",
-            './bluetoothio.js',
+            './index.js',
         ],
         "cflags!": [
             "-fno-exceptions"
