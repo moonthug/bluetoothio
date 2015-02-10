@@ -1,0 +1,35 @@
+{
+  "name": "bluelist",
+  "version": "0.0.1",
+  "description": "BluetoothIO bindings for NodeJS",
+  "main": "bluelist.js",
+  "scripts": {
+    "test": "mocha test",
+    "install": "node-gyp rebuild"
+  },
+  "author": "moonthug <stuff@m00nplug.com>",
+  "license": "MIT",
+  "gypfile": true,
+  "devDependencies": {
+    "mocha": "^2.1.0",
+    "should": "^5.0.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "should": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moonthug/bluetoothio.git"
+  },
+  "keywords": [
+    "Bluetooth",
+    "OSX"
+  ],
+  "bugs": {
+    "url": "https://github.com/moonthug/bluetoothio/issues"
+  },
+  "homepage": "https://github.com/moonthug/bluetoothio"
+}
