@@ -18,6 +18,23 @@
 
 using namespace v8;
 
+//--------------------------------------------------------------
+Handle<Value> InquireForDevices(const Arguments& args) {
+    HandleScope scope;
+
+    int length = 10;
+    if (!args[0]->IsNumber()) {
+        ThrowException(Exception::TypeError(String::New("Invalid inquiry length")));
+        return scope.Close(Undefined());;
+    }
+    
+//    Number inquiryLengthArg(args[0]->ToNumber());
+//    length = std::string(*macAddressArg);
+    
+    BluetoothIOManager::inquireForDevices(length);
+    
+    return scope.Close(Undefined());
+}
 
 //--------------------------------------------------------------
 Handle<Value> GetPairedDevices(const Arguments& args) {
@@ -75,7 +92,7 @@ Handle<Value> ConnectToDevice(const Arguments& args) {
         return scope.Close(Undefined());;
     }
     
-    v8::String::Utf8Value macAddressArg(args[0]->ToString());
+    String::Utf8Value macAddressArg(args[0]->ToString());
     string macAddress = std::string(*macAddressArg);
     
     BluetoothIOManager::connectToDevice(macAddress);
@@ -86,6 +103,9 @@ Handle<Value> ConnectToDevice(const Arguments& args) {
 
 //--------------------------------------------------------------
 void Init(Handle<Object> exports) {
+    exports->Set(String::NewSymbol("inquireForDevices"),
+                 FunctionTemplate::New(InquireForDevices)->GetFunction());
+    
     exports->Set(String::NewSymbol("getPairedDevices"),
                  FunctionTemplate::New(GetPairedDevices)->GetFunction());
     

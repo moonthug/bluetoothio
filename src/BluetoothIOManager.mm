@@ -14,7 +14,6 @@
 //
 // OSX
 //
-
 #import <Foundation/Foundation.h>
 #import <IOBluetooth/IOBluetooth.h>
 #import <IOBluetooth/objc/IOBluetoothDeviceInquiry.h>
@@ -24,22 +23,30 @@
 
 @interface BlueController : NSObject {
 }
+
+@property vector<BluetoothIODevice *> devices;
+@property void (*inquiryCompleteCallback)(vector<BluetoothIODevice *> devices);
+
+- (void)inquireForDevices:(uint8_t)inquiryLength
+  inquiryCompleteCallback:(void (*)(vector<BluetoothIODevice *> devices))inquiryCompleteCallback;
+
 - (void)connectToDevice:(NSString*)addrStr;
 - (void)disconnectFromDevice:(NSString*)addrStr;
+
 @end
 
 @interface BlueController () <IOBluetoothDeviceInquiryDelegate>
-@property IOBluetoothDeviceInquiry *inquiry;
+@property IOBluetoothDeviceInquiry * inquiry;
 @end
 
 @implementation BlueController
 
 //--------------------------------------------------------------
 - (id) init {
-    
-//    _inquiry = [IOBluetoothDeviceInquiry inquiryWithDelegate:self];
-//    [_inquiry start];
-    [IOBluetoothDevice registerForConnectNotifications:self selector:@selector(deviceIsConnected:fromDevice:)];
+    _inquiry = [IOBluetoothDeviceInquiry inquiryWithDelegate:self];
+
+    [IOBluetoothDevice registerForConnectNotifications:self
+                                              selector:@selector(deviceIsConnected:fromDevice:)];
     
     return self;
 }
@@ -49,6 +56,17 @@
 //    [super dealloc];
 //}
 
+//--------------------------------------------------------------
+- (void)inquireForDevices:(uint8_t)inquiryLength
+  inquiryCompleteCallback:(void (*)(vector<BluetoothIODevice *> devices))inquiryCompleteCallback {
+    
+    _inquiryCompleteCallback = inquiryCompleteCallback;
+    
+    //[_inquiry setInquiryLength:(inquiryLength)];
+    [_inquiry start];
+    
+    NSLog(@"Start searching...");
+}
 
 
 //--------------------------------------------------------------
@@ -80,22 +98,28 @@
 
 //--------------------------------------------------------------
 - (void)deviceInquiryStarted:(IOBluetoothDeviceInquiry *)sender {
-    //NSLog(@"Searching....");
+    NSLog(@"Searching....");
 }
 
 //--------------------------------------------------------------
 - (void)deviceInquiryDeviceFound:(IOBluetoothDeviceInquiry *)sender
                           device:(IOBluetoothDevice *)device {
     
-    //NSLog(@"Found: %@", [device nameOrAddress]);
-    [device openConnection];
+    //[device openConnection];
+    NSString * deviceName       = [device name];
+    NSString * deviceAddress    = [device addressString];
+
+    BluetoothIODevice * dev =
+        new BluetoothIODevice(std::string([deviceName UTF8String]), std::string([deviceAddress UTF8String]));
+    
+    _devices.push_back(dev);
 }
 
 //--------------------------------------------------------------
 - (void)deviceInquiryComplete:(IOBluetoothDeviceInquiry *)sender
                         error:(IOReturn)error
                       aborted:(BOOL)aborted {
-    //NSLog(@"Complete");
+    (*_inquiryCompleteCallback)(_devices);
 }
 
 //
@@ -243,6 +267,31 @@ vector<BluetoothIODevice> BluetoothIOManager::getConnectedDevices() {
     }
     return connectedDevices;
 }
+
+//
+// TEST
+void onInquiryComplete(vector<BluetoothIODevice *> devices) {
+    NSLog(@"Found Devices: %lu", devices.size());
+
+    for(vector<BluetoothIODevice *>::iterator i = devices.begin(); i != devices.end(); ++i) {
+        BluetoothIODevice device = (**i);
+        NSLog(@"Device: %s@%s", device.name.c_str(), device.address.c_str());
+    }
+}
+
+//--------------------------------------------------------------
+void BluetoothIOManager::inquireForDevices() {
+    BluetoothIOManager::inquireForDevices(10);
+}
+
+//--------------------------------------------------------------
+void BluetoothIOManager::inquireForDevices(int inquiryLength) {
+    
+    // @todo: Wait for callback before program ends
+    [getControllerInstance() inquireForDevices: inquiryLength
+                       inquiryCompleteCallback: onInquiryComplete];
+}
+
 
 //--------------------------------------------------------------
 void BluetoothIOManager::connectToDevice(string deviceAddress) {

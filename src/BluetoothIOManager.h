@@ -47,6 +47,9 @@ public:
     static vector<BluetoothIODevice> getPairedDevices();
     static vector<BluetoothIODevice> getConnectedDevices();
     
+    static void inquireForDevices();
+    static void inquireForDevices(int inquiryLength);
+
     static void connectToDevice(string deviceAddress);
     static void disconnectFromDevice(string deviceAddress);
     
